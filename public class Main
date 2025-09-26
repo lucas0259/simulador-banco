@@ -1,0 +1,86 @@
+    public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<Conta> contas = new ArrayList<>();
+
+        while (true) {
+            System.out.println("\n=== Simulador de Caixa Eletrônico ===");
+            System.out.println("1 - Criar conta");
+            System.out.println("2 - Ver saldo");
+            System.out.println("3 - Depositar");
+            System.out.println("4 - Sacar");
+            System.out.println("5 - Transferir");
+            System.out.println("6 - Sair");
+            System.out.print("Escolha uma opção: ");
+            int opcao = scanner.nextInt();
+            scanner.nextLine(); // limpar buffer
+
+            if (opcao == 1) {
+                System.out.print("Digite o nome do titular: ");
+                String nome = scanner.nextLine();
+                contas.add(new Conta(nome));
+                System.out.println("Conta criada para " + nome);
+
+            } else if (opcao == 2) {
+                Conta conta = selecionarConta(contas, scanner);
+                if (conta != null) {
+                    System.out.println("Saldo de " + conta.getTitular() + ": R$" + conta.getSaldo());
+                }
+
+            } else if (opcao == 3) {
+                Conta conta = selecionarConta(contas, scanner);
+                if (conta != null) {
+                    System.out.print("Valor do depósito: ");
+                    double valor = scanner.nextDouble();
+                    conta.depositar(valor);
+                }
+
+            } else if (opcao == 4) {
+                Conta conta = selecionarConta(contas, scanner);
+                if (conta != null) {
+                    System.out.print("Valor do saque: ");
+                    double valor = scanner.nextDouble();
+                    conta.sacar(valor);
+                }
+
+            } else if (opcao == 5) {
+                System.out.println("Conta origem:");
+                Conta origem = selecionarConta(contas, scanner);
+                System.out.println("Conta destino:");
+                Conta destino = selecionarConta(contas, scanner);
+                if (origem != null && destino != null) {
+                    System.out.print("Valor da transferência: ");
+                    double valor = scanner.nextDouble();
+                    origem.transferir(destino, valor);
+                }
+
+            } else if (opcao == 6) {
+                System.out.println("Saindo... Obrigado por usar o simulador!");
+                break;
+            } else {
+                System.out.println("Opção inválida!");
+            }
+        }
+
+        scanner.close();
+    }
+
+    private static Conta selecionarConta(ArrayList<Conta> contas, Scanner scanner) {
+        if (contas.isEmpty()) {
+            System.out.println("Nenhuma conta cadastrada.");
+            return null;
+        }
+        System.out.println("Selecione a conta (0 até " + (contas.size() - 1) + "): ");
+        for (int i = 0; i < contas.size(); i++) {
+            System.out.println(i + " - " + contas.get(i).getTitular());
+        }
+        int indice = scanner.nextInt();
+        scanner.nextLine(); // limpar buffer
+        if (indice >= 0 && indice < contas.size()) {
+            return contas.get(indice);
+        } else {
+            System.out.println("Conta inválida!");
+            return null;
+        }
+    }
+}
